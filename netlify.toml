@@ -1,0 +1,4 @@
+[build]
+  command = "npm run build:backend"
+  functions = ".netlify/lambdas/"
+  publish = "dist"
