@@ -2,15 +2,18 @@ import { ApolloServer, gql } from 'apollo-server-lambda';
 
 const typeDefs = gql`
   type Query {
-    hello: String
+    greetings(name: String!): String
     words: [String!]
+  }
+
+  schema {
+    query: Query
   }
 `;
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello, world!',
-    words: () => ['foo', 'bar'],
+    greetings: (_root: unknown, args: {name: string}, _context: unknown, _info: unknown) => `Bonjour ${args.name}!`,
   },
 };
 
@@ -19,4 +22,9 @@ const server = new ApolloServer({
   resolvers,
 });
 
-exports.handler = server.createHandler();
+exports.handler = server.createHandler({
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+});
