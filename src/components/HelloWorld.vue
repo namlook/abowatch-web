@@ -1,34 +1,63 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>{{ greetings}} </h2>
+    <h2>{{ greetings }}</h2>
+    <input type="number" v-model.number="step" min="0" />
+    <button @click="increment">{{ counter }}</button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import gql from 'graphql-tag';
+import { GreetingsQueryVariables, IncrementMutation, IncrementMutationVariables } from '@/generated/graphql';
+import GREETINGS_QUERY from './greetings.graphql';
+import COUNTER_QUERY from './counter.graphql';
+import INCREMENT_MUTATION from './increment.mutation.graphql';
 
 @Component({
   apollo: {
     greetings: {
-      query: gql`query Greetings($name: String!) {
-        greetings(name: $name)
-      }`,
-      variables() {
+      query: GREETINGS_QUERY,
+      variables(): GreetingsQueryVariables {
         return {
           name: this.name,
         };
       },
     },
+    counter: COUNTER_QUERY,
   },
 })
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
 
-  name = 'Nico'
+  name = 'Nico';
 
-  greetings = ''
+  greetings = '';
+
+  step = 1;
+
+  counter = 0;
+
+  async increment() {
+    const { data, errors } = await this.$apollo.mutate<
+      IncrementMutation,
+      IncrementMutationVariables
+    >({
+      mutation: INCREMENT_MUTATION,
+      variables: {
+        step: this.step,
+      },
+    });
+
+    if (errors) {
+      console.log('XXXX', errors);
+      return;
+    }
+
+    if (data) {
+      this.counter = data.increment;
+    }
+  }
 }
 </script>
 

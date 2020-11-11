@@ -2,6 +2,7 @@
 node_modules
 .netlify
 /dist
+graphql.schema.json
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
