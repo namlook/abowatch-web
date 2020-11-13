@@ -1,0 +1,9 @@
+query SubscriptionForm($id: ID) {
+    subscription(id: $id) {
+        id
+        name
+        price
+        billingMode
+        dividedBy
+    }
+}

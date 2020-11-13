@@ -11,7 +11,7 @@
     "serve:backend": "netlify-lambda serve lambdas",
     "build:backend": "netlify-lambda build lambdas",
     "lint:backend": "eslint ./lambdas --ext .js,.ts",
-    "build-graphql": "graphql-codegen --config codegen.yml"
+    "build-graphql": "graphql-codegen --config codegen.yml && eslint --fix src/generated/graphql.ts"
   },
   "dependencies": {
     "@types/aws-lambda": "^8.10.64",

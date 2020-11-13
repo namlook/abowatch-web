@@ -1,3 +1,0 @@
-  query Greetings($name: String!) {
-    greetings(name: $name)
-  }

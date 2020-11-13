@@ -11,26 +11,53 @@ export type Scalars = {
   Upload: any;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  greetings?: Maybe<Scalars['String']>;
-  words?: Maybe<Array<Scalars['String']>>;
-  counter: Scalars['Int'];
+export enum BillingMode {
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Monthly = 'monthly',
+  Quaterly = 'quaterly',
+  Yearly = 'yearly'
+}
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+  billingMode: BillingMode;
+  dividedBy: Scalars['Int'];
 };
 
-
-export type QueryGreetingsArgs = {
+export type SubscriptionInput = {
   name: Scalars['String'];
+  price: Scalars['Float'];
+  billingMode: BillingMode;
+  dividedBy: Scalars['Int'];
+};
+
+export type SaveSubscriptionResponse = {
+  __typename?: 'SaveSubscriptionResponse';
+  subscription: Subscription;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  subscriptions?: Maybe<Array<Subscription>>;
+  subscription?: Maybe<Subscription>;
+};
+
+export type QuerySubscriptionArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  increment: Scalars['Int'];
+  saveSubscription?: Maybe<SaveSubscriptionResponse>;
 };
 
-
-export type MutationIncrementArgs = {
-  step: Scalars['Int'];
+export type MutationSaveSubscriptionArgs = {
+  input: SubscriptionInput;
+  id?: Maybe<Scalars['ID']>;
 };
 
 export enum CacheControlScope {
@@ -38,43 +65,50 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
-
-export type CounterQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CounterQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'counter'>
-);
-
-export type GreetingsQueryVariables = Exact<{
-  name: Scalars['String'];
+export type SubscriptionFormQueryVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
 }>;
 
-
-export type GreetingsQuery = (
+export type SubscriptionFormQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'greetings'>
+  & { subscription?: Maybe<(
+    { __typename?: 'Subscription' }
+    & Pick<Subscription, 'id' | 'name' | 'price' | 'billingMode' | 'dividedBy'>
+  )>; }
 );
 
-export type IncrementMutationVariables = Exact<{
-  step: Scalars['Int'];
+export type SubscriptionFormSaveSubscriptionMutationVariables = Exact<{
+  input: SubscriptionInput;
+  id?: Maybe<Scalars['ID']>;
 }>;
 
-
-export type IncrementMutation = (
+export type SubscriptionFormSaveSubscriptionMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'increment'>
+  & { saveSubscription?: Maybe<(
+    { __typename?: 'SaveSubscriptionResponse' }
+    & { subscription: (
+      { __typename?: 'Subscription' }
+      & Pick<Subscription, 'id'>
+    ); }
+  )>; }
 );
 
+export type SubscriptionsListQueryVariables = Exact<{ [key: string]: never }>;
 
-      export interface PossibleTypesResultData {
+export type SubscriptionsListQuery = (
+  { __typename?: 'Query' }
+  & { subscriptions?: Maybe<Array<(
+    { __typename?: 'Subscription' }
+    & Pick<Subscription, 'id' | 'name' | 'price' | 'dividedBy' | 'billingMode'>
+  )>>; }
+);
+
+export interface PossibleTypesResultData {
         possibleTypes: {
-          [key: string]: string[]
-        }
+          [key: string]: string[];
+        };
       }
-      const result: PossibleTypesResultData = {
-  "possibleTypes": {}
+const result: PossibleTypesResultData = {
+  possibleTypes: {},
 };
-      export default result;
-    
+export default result;

@@ -1,0 +1,9 @@
+query SubscriptionsList {
+    subscriptions {
+        id
+        name
+        price
+        dividedBy
+        billingMode
+    }
+}

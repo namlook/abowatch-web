@@ -10,4 +10,9 @@ const apolloClient = new ApolloClient({
 
 export default new VueApollo({
   defaultClient: apolloClient,
+  defaultOptions: {
+    $query: {
+      fetchPolicy: 'cache-and-network',
+    },
+  },
 });

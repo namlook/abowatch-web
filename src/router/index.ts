@@ -1,14 +1,32 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Home from '../views/Home.vue';
+import SubscriptionForm from '../components/SubscriptionForm/component.vue';
+import Home from '../views/Home/component.vue';
+import links from './links';
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
+  },
+  // {
+  //   path: '/',
+  //   name: links.subscriptions.list,
+  //   component: SubscriptionsList,
+  // },
+  {
+    path: '/new',
+    name: links.subscriptions.new,
+    component: SubscriptionForm,
+  },
+  {
+    path: '/edit/:subscriptionId',
+    name: links.subscriptions.edit,
+    component: SubscriptionForm,
+    props: true,
   },
   {
     path: '/about',

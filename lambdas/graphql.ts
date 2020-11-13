@@ -1,16 +1,45 @@
 import { ApolloServer, gql } from 'apollo-server-lambda';
 
-let COUNTER = 0;
+const DB = {
+  subscriptions: [],
+};
 
 const typeDefs = gql`
+
+  enum BillingMode {
+    daily
+    weekly
+    monthly
+    quaterly
+    yearly
+  }
+
+  type Subscription {
+    id: String!
+    name: String!
+    price: Float!
+    billingMode: BillingMode!
+    dividedBy: Int!
+  }
+
+  input SubscriptionInput {
+    name: String!
+    price: Float!
+    billingMode: BillingMode!
+    dividedBy: Int!
+  }
+
+  type SaveSubscriptionResponse {
+    subscription: Subscription!
+  }
+
   type Query {
-    greetings(name: String!): String
-    words: [String!]
-    counter: Int!
+    subscriptions: [Subscription!]
+    subscription(id: ID): Subscription
   }
 
   type Mutation {
-    increment(step: Int!): Int!
+    saveSubscription(input: SubscriptionInput!, id: ID): SaveSubscriptionResponse
   }
 
   schema {
@@ -21,15 +50,28 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    counter: () => COUNTER,
-    greetings: (_root: unknown, args: {name: string}, _context: unknown, _info: unknown) => `Bonjour ${args.name}!`,
-    words: () => ['coucou', 'monde'],
+    subscriptions: () => DB.subscriptions,
+    subscription: (_, { id }) => DB.subscriptions.find((item) => item.id === id),
   },
   Mutation: {
-    increment(_root: unknown, args: {step: number}, _context: unknown) {
-      COUNTER += args.step;
-      console.log(`incrementing '${COUNTER}'`);
-      return COUNTER;
+    saveSubscription(_, args) {
+      const { input, id } = args;
+      let subscription;
+      let subscriptions;
+      if (!id) {
+        subscription = { ...input, id: `${DB.subscriptions.length + 1}` };
+        subscriptions = [...DB.subscriptions, subscription];
+      } else {
+        subscription = { ...input, id };
+        subscriptions = DB.subscriptions.map((item) => {
+          if (item.id === id) {
+            return subscription;
+          }
+          return item;
+        });
+      }
+      DB.subscriptions = subscriptions;
+      return { subscription };
     },
   },
 };
