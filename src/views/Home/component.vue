@@ -7,6 +7,10 @@
 
     <div v-if="loading">loading...</div>
     <div v-else-if="error">{{ error }}</div>
-    <SubscriptionsList v-else :subscriptions="subscriptions" />
+    <SubscriptionsList
+      v-else
+      :subscriptions="subscriptions"
+      @delete-subscription="onDeleteSubscription"
+    />
   </div>
 </template>

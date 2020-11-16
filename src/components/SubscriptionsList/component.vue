@@ -9,6 +9,7 @@
         {{ subscription.billingMode }}
       </p>
       <a :href="`#/edit/${subscription.id}`">edit</a>
+      <button @click="deleteSubscription(subscription.id)">delete</button>
     </div>
   </div>
 </template>

@@ -33,6 +33,10 @@ const typeDefs = gql`
     subscription: Subscription!
   }
 
+  type DeleteSubscriptionResponse {
+    success: Boolean!
+  }
+
   type Query {
     subscriptions: [Subscription!]
     subscription(id: ID): Subscription
@@ -40,6 +44,7 @@ const typeDefs = gql`
 
   type Mutation {
     saveSubscription(input: SubscriptionInput!, id: ID): SaveSubscriptionResponse
+    deleteSubscription(id: ID!): DeleteSubscriptionResponse
   }
 
   schema {
@@ -54,8 +59,7 @@ const resolvers = {
     subscription: (_, { id }) => DB.subscriptions.find((item) => item.id === id),
   },
   Mutation: {
-    saveSubscription(_, args) {
-      const { input, id } = args;
+    saveSubscription(_, { input, id }) {
       let subscription;
       let subscriptions;
       if (!id) {
@@ -72,6 +76,14 @@ const resolvers = {
       }
       DB.subscriptions = subscriptions;
       return { subscription };
+    },
+
+    deleteSubscription(_, { id }) {
+      const nbSubscriptions = DB.subscriptions.length;
+      DB.subscriptions = DB.subscriptions.filter((item) => item.id !== id);
+      return {
+        success: nbSubscriptions > DB.subscriptions.length,
+      };
     },
   },
 };

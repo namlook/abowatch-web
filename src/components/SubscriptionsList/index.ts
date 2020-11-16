@@ -9,4 +9,14 @@ export default defineComponent({
       required: true,
     },
   },
+
+  setup(props, { emit }) {
+    const deleteSubscription = (subscriptionId: string) => {
+      emit('delete-subscription', subscriptionId);
+    };
+    return {
+      deleteSubscription,
+    };
+  },
+
 });

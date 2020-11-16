@@ -8,9 +8,6 @@ module.exports = {
     // Files processed by the extension
     includes: [
       'src/**/*.graphql',
-      'src/**/*.vue',
-      'src/**/*.js',
-      'src/**/*.ts',
     ],
   },
 };

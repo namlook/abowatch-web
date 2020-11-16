@@ -1,5 +1,5 @@
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
-import { useSubscriptionsListQuery } from '@/generated/graphql';
+import { useSubscriptionsListDeleteSubscriptionMutation, useSubscriptionsListQuery } from '@/generated/graphql';
 import router from '@/router';
 import links from '@/router/links';
 import { useResult } from '@vue/apollo-composable';
@@ -13,12 +13,30 @@ export default defineComponent({
   },
 
   setup() {
-    const { result, loading, error } = useSubscriptionsListQuery({
-      fetchPolicy: 'cache-and-network',
-    });
-
+    /**
+     * Fetch subscriptions
+     */
+    const {
+      result,
+      loading,
+      error,
+      refetch: refetchSubscriptions,
+    } = useSubscriptionsListQuery({ fetchPolicy: 'cache-and-network' });
     const subscriptions = useResult(result, [], (data) => data.subscriptions);
 
+    /**
+     * Handle subscription deletion
+     */
+    const { mutate: deleteSubscription, onDone: onSubscriptionDeleted } = useSubscriptionsListDeleteSubscriptionMutation({});
+
+    const onDeleteSubscription = (subscriptionId: string) => {
+      deleteSubscription({ id: subscriptionId });
+      onSubscriptionDeleted(refetchSubscriptions);
+    };
+
+    /**
+     * Some links
+     */
     const goToNewSubscriptionPage = () => router.push({ name: links.subscriptions.new });
 
     return {
@@ -26,6 +44,8 @@ export default defineComponent({
       loading,
       error,
       goToNewSubscriptionPage,
+      onDeleteSubscription,
+
     };
   },
 });
