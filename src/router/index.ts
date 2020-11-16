@@ -12,11 +12,6 @@ const routes: Array<RouteConfig> = [
     name: 'home',
     component: Home,
   },
-  // {
-  //   path: '/',
-  //   name: links.subscriptions.list,
-  //   component: SubscriptionsList,
-  // },
   {
     path: '/new',
     name: links.subscriptions.new,
@@ -30,7 +25,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/about',
-    name: 'About',
+    name: links.about,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
