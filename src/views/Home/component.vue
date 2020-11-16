@@ -3,16 +3,10 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="./logo.png" />
-    <button @click="gotToNewSubcription">new</button>
+    <button @click="goToNewSubscriptionPage">new</button>
 
-    <ApolloQuery :query="query">
-      <template v-slot="{ result: { loading, error, data } }">
-        <div v-if="loading">loading...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else-if="data">
-          <SubscriptionsList :subscriptions="data.subscriptions" />
-        </div>
-      </template>
-    </ApolloQuery>
+    <div v-if="loading">loading...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <SubscriptionsList v-else :subscriptions="subscriptions" />
   </div>
 </template>

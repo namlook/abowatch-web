@@ -6,9 +6,10 @@ generates:
     plugins:
       - "typescript"
       - "typescript-operations"
+      - "typescript-vue-apollo"
       # - "typescript-graphql-files-modules"
       # - "typescript-document-nodes"
-      - "fragment-matcher"
-  ./graphql.schema.json:
-    plugins:
-      - "introspection"
+      # - "fragment-matcher"
+  # ./graphql.schema.json:
+  #   plugins:
+  #     - "introspection"

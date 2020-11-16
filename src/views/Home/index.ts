@@ -1,17 +1,31 @@
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
+import { useSubscriptionsListQuery } from '@/generated/graphql';
+import router from '@/router';
 import links from '@/router/links';
-import { Component, Vue } from 'vue-property-decorator';
-import SubscriptionsListGraphqlQuery from './query.graphql';
+import { useResult } from '@vue/apollo-composable';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
+  name: 'Home',
+
   components: {
     SubscriptionsList,
   },
-})
-export default class Home extends Vue {
-  private query = SubscriptionsListGraphqlQuery;
 
-  gotToNewSubcription() {
-    this.$router.push({ name: links.subscriptions.new });
-  }
-}
+  setup() {
+    const { result, loading, error } = useSubscriptionsListQuery({
+      fetchPolicy: 'cache-and-network',
+    });
+
+    const subscriptions = useResult(result, [], (data) => data.subscriptions);
+
+    const goToNewSubscriptionPage = () => router.push({ name: links.subscriptions.new });
+
+    return {
+      subscriptions,
+      loading,
+      error,
+      goToNewSubscriptionPage,
+    };
+  },
+});

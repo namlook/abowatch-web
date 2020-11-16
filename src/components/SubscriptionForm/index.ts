@@ -1,124 +1,83 @@
 import {
-  BillingMode,
-  SubscriptionFormQuery,
-  SubscriptionFormQueryVariables,
-  SubscriptionFormSaveSubscriptionMutationVariables,
-  SubscriptionInput,
+  useSubscriptionFormQuery, useSubscriptionFormSaveSubscriptionMutation,
 } from '@/generated/graphql';
+import router from '@/router';
 import links from '@/router/links';
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import SubscriptionGraphqlQuery from './query.graphql';
-import SaveSubscriptionGraphqlMutation from './save.mutation.graphql';
+import { useResult } from '@vue/apollo-composable';
+import { defineComponent, reactive, watch } from '@vue/composition-api';
 
-@Component({
-  //   apollo: {
-  //     subscription: {
-  //       query: SubscriptionQuery,
-  //       variables(): SubscriptionFormQueryVariables {
-  //         return {
-  //           id: this.subscriptionId,
-  //         };
-  //       },
-  //       result({ data }) {
-  //         console.log('data', data);
-  //         if (!data) {
-  //           return;
-  //         }
-  //         const {
-  //           name, price, billingMode, dividedBy,
-  //         } = data.subscription;
-  //         this.form = {
-  //           name,
-  //           price,
-  //           billingMode,
-  //           dividedBy,
-  //         };
-  //       },
-  //     },
-  //   },
-})
-export default class SubscriptionsList extends Vue {
-  @Prop({ type: String }) readonly subscriptionId!: string;
+export default defineComponent({
+  name: 'SubscriptionForm',
 
-  loading = false
-  // query = SubscriptionGraphqlQuery
+  props: {
+    subscriptionId: {
+      type: String,
+    },
+  },
 
-  // queryVariables(): SubscriptionFormQueryVariables {
-  //   return {
-  //     id: this.subscriptionId,
-  //   };
-  // }
+  setup({ subscriptionId }) {
+    /*
+     * The form that will serve as SubscriptionInput mutation input
+     */
+    const form = reactive({
+      name: '',
+      price: 0,
+      dividedBy: 0,
+      billingMode: 'monthly',
+    });
 
-  mutation = SaveSubscriptionGraphqlMutation
+    /**
+     * Load the subscription if an ID is passed
+     */
+    const {
+      result: queryResult,
+      loading: queryLoading,
+      error: queryError,
+    } = useSubscriptionFormQuery({ id: subscriptionId });
 
-  private form: SubscriptionInput = {
-    name: '',
-    price: 0,
-    dividedBy: 1,
-    billingMode: BillingMode.Daily,
-  };
+    const subscriptionResult = useResult(queryResult, null, (o) => o.subscription);
 
-  async mounted() {
-    this.loading = true;
+    /**
+     * Fill the form with the subscription fields
+     */
+    watch(subscriptionResult, (value) => {
+      if (value) {
+        form.billingMode = value.billingMode;
+        form.name = value.name;
+        form.price = value.price;
+        form.dividedBy = value.dividedBy;
+      }
+    });
 
-    const { data, errors } = await this.$apollo.query<
-      SubscriptionFormQuery,
-      SubscriptionFormQueryVariables
-    >({
-      query: SubscriptionGraphqlQuery,
+    /**
+     * The mutation that will save the subscription
+     */
+    const {
+      mutate: saveSubscription,
+      loading: mutationLoading,
+      error: mutationError,
+      onDone,
+    } = useSubscriptionFormSaveSubscriptionMutation({
       variables: {
-        id: this.subscriptionId,
+        input: form,
+        id: subscriptionId,
       },
     });
 
-    this.loading = false;
+    /**
+     * When the save button is clicked, go back to the home page
+     */
+    onDone(() => {
+      router.push({ name: links.home });
+    });
 
-    if (errors) {
-      console.log('XXXX', errors);
-      return;
-    }
-
-    if (data.subscription) {
-      const {
-        name, price, dividedBy, billingMode,
-      } = data.subscription;
-      this.form = {
-        name,
-        price,
-        dividedBy,
-        billingMode,
-      };
-    }
-  }
-
-  get mutationVariables(): SubscriptionFormSaveSubscriptionMutationVariables {
     return {
-      input: this.form,
-      id: this.subscriptionId,
+      form,
+      queryLoading,
+      queryError,
+      saveSubscription,
+      mutationLoading,
+      mutationError,
     };
-  }
-
-  onSave() {
-    this.$router.push({ name: links.home });
-  }
-
-  // async save() {
-  //   const { data, errors } = await this.$apollo.mutate<
-  //     SubscriptionFormSaveSubscriptionMutation,
-  //     SubscriptionFormSaveSubscriptionMutationVariables
-  //   >({
-  //     mutation: SaveSubscriptionMutation,
-  //     variables: {
-  //       input: this.form,
-  //       id: this.subscriptionId,
-  //     },
-  //   });
-
-  //   if (errors) {
-  //     console.log('XXXX', errors);
-  //   }
-
-  //   console.log(data);
-  //   this.$router.push({ name: links.subscriptions.list });
-  // }
-}
+  },
+});
