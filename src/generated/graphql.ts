@@ -80,6 +80,18 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
+export type SubscriptionFormDeleteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type SubscriptionFormDeleteMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteSubscription?: Maybe<(
+    { __typename?: 'DeleteSubscriptionResponse' }
+    & Pick<DeleteSubscriptionResponse, 'success'>
+  )>; }
+);
+
 export type SubscriptionFormQueryVariables = Exact<{
   id?: Maybe<Scalars['ID']>;
 }>;
@@ -92,12 +104,12 @@ export type SubscriptionFormQuery = (
   )>; }
 );
 
-export type SubscriptionFormSaveSubscriptionMutationVariables = Exact<{
+export type SubscriptionFormSaveMutationVariables = Exact<{
   input: SubscriptionInput;
   id?: Maybe<Scalars['ID']>;
 }>;
 
-export type SubscriptionFormSaveSubscriptionMutation = (
+export type SubscriptionFormSaveMutation = (
   { __typename?: 'Mutation' }
   & { saveSubscription?: Maybe<(
     { __typename?: 'SaveSubscriptionResponse' }
@@ -105,18 +117,6 @@ export type SubscriptionFormSaveSubscriptionMutation = (
       { __typename?: 'Subscription' }
       & Pick<Subscription, 'id'>
     ); }
-  )>; }
-);
-
-export type SubscriptionsListDeleteSubscriptionMutationVariables = Exact<{
-  id: Scalars['ID'];
-}>;
-
-export type SubscriptionsListDeleteSubscriptionMutation = (
-  { __typename?: 'Mutation' }
-  & { deleteSubscription?: Maybe<(
-    { __typename?: 'DeleteSubscriptionResponse' }
-    & Pick<DeleteSubscriptionResponse, 'success'>
   )>; }
 );
 
@@ -130,6 +130,35 @@ export type SubscriptionsListQuery = (
   )>>; }
 );
 
+export const SubscriptionFormDeleteDocument = gql`
+    mutation SubscriptionFormDelete($id: ID!) {
+  deleteSubscription(id: $id) {
+    success
+  }
+}
+    `;
+
+/**
+ * __useSubscriptionFormDeleteMutation__
+ *
+ * To run a mutation, you first call `useSubscriptionFormDeleteMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionFormDeleteMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useSubscriptionFormDeleteMutation({
+ *   variables: {
+ *     id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSubscriptionFormDeleteMutation(options: VueApolloComposable.UseMutationOptions<SubscriptionFormDeleteMutation, SubscriptionFormDeleteMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubscriptionFormDeleteMutation, SubscriptionFormDeleteMutationVariables>>) {
+  return VueApolloComposable.useMutation<SubscriptionFormDeleteMutation, SubscriptionFormDeleteMutationVariables>(SubscriptionFormDeleteDocument, options);
+}
+export type SubscriptionFormDeleteMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubscriptionFormDeleteMutation, SubscriptionFormDeleteMutationVariables>;
 export const SubscriptionFormDocument = gql`
     query SubscriptionForm($id: ID) {
   subscription(id: $id) {
@@ -161,8 +190,8 @@ export function useSubscriptionFormQuery(variables?: SubscriptionFormQueryVariab
   return VueApolloComposable.useQuery<SubscriptionFormQuery, SubscriptionFormQueryVariables>(SubscriptionFormDocument, variables, options);
 }
 export type SubscriptionFormQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SubscriptionFormQuery, SubscriptionFormQueryVariables>;
-export const SubscriptionFormSaveSubscriptionDocument = gql`
-    mutation SubscriptionFormSaveSubscription($input: SubscriptionInput!, $id: ID) {
+export const SubscriptionFormSaveDocument = gql`
+    mutation SubscriptionFormSave($input: SubscriptionInput!, $id: ID) {
   saveSubscription(input: $input, id: $id) {
     subscription {
       id
@@ -172,56 +201,27 @@ export const SubscriptionFormSaveSubscriptionDocument = gql`
     `;
 
 /**
- * __useSubscriptionFormSaveSubscriptionMutation__
+ * __useSubscriptionFormSaveMutation__
  *
- * To run a mutation, you first call `useSubscriptionFormSaveSubscriptionMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useSubscriptionFormSaveSubscriptionMutation` returns an object that includes:
+ * To run a mutation, you first call `useSubscriptionFormSaveMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useSubscriptionFormSaveMutation` returns an object that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
  *
  * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
  *
  * @example
- * const { mutate, loading, error, onDone } = useSubscriptionFormSaveSubscriptionMutation({
+ * const { mutate, loading, error, onDone } = useSubscriptionFormSaveMutation({
  *   variables: {
  *     input: // value for 'input'
  *     id: // value for 'id'
  *   },
  * });
  */
-export function useSubscriptionFormSaveSubscriptionMutation(options: VueApolloComposable.UseMutationOptions<SubscriptionFormSaveSubscriptionMutation, SubscriptionFormSaveSubscriptionMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubscriptionFormSaveSubscriptionMutation, SubscriptionFormSaveSubscriptionMutationVariables>>) {
-  return VueApolloComposable.useMutation<SubscriptionFormSaveSubscriptionMutation, SubscriptionFormSaveSubscriptionMutationVariables>(SubscriptionFormSaveSubscriptionDocument, options);
+export function useSubscriptionFormSaveMutation(options: VueApolloComposable.UseMutationOptions<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables>>) {
+  return VueApolloComposable.useMutation<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables>(SubscriptionFormSaveDocument, options);
 }
-export type SubscriptionFormSaveSubscriptionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubscriptionFormSaveSubscriptionMutation, SubscriptionFormSaveSubscriptionMutationVariables>;
-export const SubscriptionsListDeleteSubscriptionDocument = gql`
-    mutation SubscriptionsListDeleteSubscription($id: ID!) {
-  deleteSubscription(id: $id) {
-    success
-  }
-}
-    `;
-
-/**
- * __useSubscriptionsListDeleteSubscriptionMutation__
- *
- * To run a mutation, you first call `useSubscriptionsListDeleteSubscriptionMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useSubscriptionsListDeleteSubscriptionMutation` returns an object that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
- *
- * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
- *
- * @example
- * const { mutate, loading, error, onDone } = useSubscriptionsListDeleteSubscriptionMutation({
- *   variables: {
- *     id: // value for 'id'
- *   },
- * });
- */
-export function useSubscriptionsListDeleteSubscriptionMutation(options: VueApolloComposable.UseMutationOptions<SubscriptionsListDeleteSubscriptionMutation, SubscriptionsListDeleteSubscriptionMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<SubscriptionsListDeleteSubscriptionMutation, SubscriptionsListDeleteSubscriptionMutationVariables>>) {
-  return VueApolloComposable.useMutation<SubscriptionsListDeleteSubscriptionMutation, SubscriptionsListDeleteSubscriptionMutationVariables>(SubscriptionsListDeleteSubscriptionDocument, options);
-}
-export type SubscriptionsListDeleteSubscriptionMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubscriptionsListDeleteSubscriptionMutation, SubscriptionsListDeleteSubscriptionMutationVariables>;
+export type SubscriptionFormSaveMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables>;
 export const SubscriptionsListDocument = gql`
     query SubscriptionsList {
   subscriptions {

@@ -1,4 +1,4 @@
-mutation SubscriptionFormSaveSubscription($input: SubscriptionInput!, $id: ID) {
+mutation SubscriptionFormSave($input: SubscriptionInput!, $id: ID) {
     saveSubscription(input: $input, id: $id) {
         subscription {
             id

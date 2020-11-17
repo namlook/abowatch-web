@@ -1,6 +1,5 @@
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
-import { useSubscriptionsListDeleteSubscriptionMutation, useSubscriptionsListQuery } from '@/generated/graphql';
-import router from '@/router';
+import { useSubscriptionsListQuery } from '@/generated/graphql';
 import links from '@/router/links';
 import { useResult } from '@vue/apollo-composable';
 import { defineComponent } from '@vue/composition-api';
@@ -20,32 +19,20 @@ export default defineComponent({
       result,
       loading,
       error,
-      refetch: refetchSubscriptions,
     } = useSubscriptionsListQuery({ fetchPolicy: 'cache-and-network' });
+
     const subscriptions = useResult(result, [], (data) => data.subscriptions);
-
-    /**
-     * Handle subscription deletion
-     */
-    const { mutate: deleteSubscription, onDone: onSubscriptionDeleted } = useSubscriptionsListDeleteSubscriptionMutation({});
-
-    const onDeleteSubscription = (subscriptionId: string) => {
-      deleteSubscription({ id: subscriptionId });
-      onSubscriptionDeleted(refetchSubscriptions);
-    };
 
     /**
      * Some links
      */
-    const goToNewSubscriptionPage = () => router.push({ name: links.subscriptions.new });
+    const newSubscriptonLink = { name: links.subscriptions.new };
 
     return {
       subscriptions,
       loading,
       error,
-      goToNewSubscriptionPage,
-      onDeleteSubscription,
-
+      newSubscriptonLink,
     };
   },
 });

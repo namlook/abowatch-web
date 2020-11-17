@@ -63,7 +63,7 @@ const resolvers = {
       let subscription;
       let subscriptions;
       if (!id) {
-        subscription = { ...input, id: `${DB.subscriptions.length + 1}` };
+        subscription = { ...input, id: `${Date.now()}` };
         subscriptions = [...DB.subscriptions, subscription];
       } else {
         subscription = { ...input, id };

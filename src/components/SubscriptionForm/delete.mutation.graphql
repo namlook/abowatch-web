@@ -1,4 +1,4 @@
-mutation SubscriptionsListDeleteSubscription($id: ID!) {
+mutation SubscriptionFormDelete($id: ID!) {
     deleteSubscription(id: $id) {
         success
     }

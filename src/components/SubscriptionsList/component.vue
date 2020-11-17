@@ -1,15 +1,15 @@
 <script lang="ts" src="./index.ts" />
 
 <template>
-  <div>
+  <div class="d-flex flex-wrap justify-space-around">
     <div v-for="subscription in subscriptions" :key="subscription.id">
-      <h3>{{ subscription.name }}</h3>
-      <p>
-        {{ subscription.price }}€ (divided by {{ subscription.dividedBy }})
-        {{ subscription.billingMode }}
-      </p>
-      <a :href="`#/edit/${subscription.id}`">edit</a>
-      <button @click="deleteSubscription(subscription.id)">delete</button>
+      <Subscription :value="subscription" class="subscription my-3" />
     </div>
   </div>
 </template>
+
+<style lang="postcss" scoped>
+.subscription {
+  min-width: 200px;
+}
+</style>

@@ -3,7 +3,7 @@ import links from '@/router/links';
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: ' App',
+  name: 'App',
 
   setup() {
     const goToHome = () => router.push({ name: links.home });

@@ -1,5 +1,8 @@
 import {
-  useSubscriptionFormQuery, useSubscriptionFormSaveSubscriptionMutation,
+  BillingMode,
+  useSubscriptionFormDeleteMutation,
+  useSubscriptionFormQuery,
+  useSubscriptionFormSaveMutation,
 } from '@/generated/graphql';
 import router from '@/router';
 import links from '@/router/links';
@@ -22,7 +25,7 @@ export default defineComponent({
     const form = reactive({
       name: '',
       price: 0,
-      dividedBy: 0,
+      dividedBy: 1,
       billingMode: 'monthly',
     });
 
@@ -33,7 +36,7 @@ export default defineComponent({
       result: queryResult,
       loading: queryLoading,
       error: queryError,
-    } = useSubscriptionFormQuery({ id: subscriptionId });
+    } = useSubscriptionFormQuery({ id: subscriptionId }, { fetchPolicy: 'cache-and-network' });
 
     const subscriptionResult = useResult(queryResult, null, (o) => o.subscription);
 
@@ -56,8 +59,8 @@ export default defineComponent({
       mutate: saveSubscription,
       loading: mutationLoading,
       error: mutationError,
-      onDone,
-    } = useSubscriptionFormSaveSubscriptionMutation({
+      onDone: onSubscriptionSaved,
+    } = useSubscriptionFormSaveMutation({
       variables: {
         input: form,
         id: subscriptionId,
@@ -67,9 +70,34 @@ export default defineComponent({
     /**
      * When the save button is clicked, go back to the home page
      */
-    onDone(() => {
+    onSubscriptionSaved(() => {
       router.push({ name: links.home });
     });
+
+    /**
+     * Handle subscription deletion
+     */
+    const {
+      mutate: deleteSubscription,
+      onDone: onSubscriptionDeleted,
+      loading: deleteSubscriptionLoading,
+    } = useSubscriptionFormDeleteMutation({ variables: { id: subscriptionId } });
+
+    onSubscriptionDeleted(() => router.push({ name: links.home }));
+
+    /**
+     * Misc
+     */
+
+    const billingModes: {text: string; value: BillingMode}[] = [
+      { text: 'Quotidienne', value: BillingMode.Daily },
+      { text: 'Hebdomadaire', value: BillingMode.Weekly },
+      { text: 'Mensuelle', value: BillingMode.Monthly },
+      { text: 'Trimestrielle', value: BillingMode.Quaterly },
+      { text: 'Annuelle', value: BillingMode.Yearly },
+    ];
+
+    const homeLink = { name: links.home };
 
     return {
       form,
@@ -78,6 +106,10 @@ export default defineComponent({
       saveSubscription,
       mutationLoading,
       mutationError,
+      billingModes,
+      homeLink,
+      deleteSubscription,
+      deleteSubscriptionLoading,
     };
   },
 });
