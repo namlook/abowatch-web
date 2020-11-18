@@ -1,3 +1,4 @@
+import BillingModesComponent from '@/components/BillingModes/component.vue';
 import {
   BillingMode,
   useSubscriptionFormDeleteMutation,
@@ -12,6 +13,10 @@ import { defineComponent, reactive, watch } from '@vue/composition-api';
 export default defineComponent({
   name: 'SubscriptionForm',
 
+  components: {
+    BillingModes: BillingModesComponent,
+  },
+
   props: {
     subscriptionId: {
       type: String,
@@ -25,7 +30,7 @@ export default defineComponent({
     const form = reactive({
       name: '',
       price: 0,
-      dividedBy: 1,
+      split: 1,
       billingMode: 'monthly',
     });
 
@@ -48,7 +53,7 @@ export default defineComponent({
         form.billingMode = value.billingMode;
         form.name = value.name;
         form.price = value.price;
-        form.dividedBy = value.dividedBy;
+        form.split = value.split;
       }
     });
 
@@ -90,11 +95,11 @@ export default defineComponent({
      */
 
     const decrementSplit = () => {
-      form.dividedBy = form.dividedBy > 1 ? form.dividedBy - 1 : 1;
+      form.split = form.split > 1 ? form.split - 1 : 1;
     };
 
     const incrementSplit = () => {
-      form.dividedBy += 1;
+      form.split += 1;
     };
 
     const billingModes: {text: string; value: BillingMode}[] = [

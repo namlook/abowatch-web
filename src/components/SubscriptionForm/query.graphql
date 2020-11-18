@@ -4,6 +4,6 @@ query SubscriptionForm($id: ID) {
         name
         price
         billingMode
-        dividedBy
+        split
     }
 }

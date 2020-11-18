@@ -30,14 +30,15 @@ export type Subscription = {
   name: Scalars['String'];
   price: Scalars['Float'];
   billingMode: BillingMode;
-  dividedBy: Scalars['Int'];
+  split: Scalars['Int'];
+  dailyPrice: Scalars['Float'];
 };
 
 export type SubscriptionInput = {
   name: Scalars['String'];
   price: Scalars['Float'];
   billingMode: BillingMode;
-  dividedBy: Scalars['Int'];
+  split: Scalars['Int'];
 };
 
 export type SaveSubscriptionResponse = {
@@ -100,7 +101,7 @@ export type SubscriptionFormQuery = (
   { __typename?: 'Query' }
   & { subscription?: Maybe<(
     { __typename?: 'Subscription' }
-    & Pick<Subscription, 'id' | 'name' | 'price' | 'billingMode' | 'dividedBy'>
+    & Pick<Subscription, 'id' | 'name' | 'price' | 'billingMode' | 'split'>
   )>; }
 );
 
@@ -126,7 +127,7 @@ export type SubscriptionsListQuery = (
   { __typename?: 'Query' }
   & { subscriptions?: Maybe<Array<(
     { __typename?: 'Subscription' }
-    & Pick<Subscription, 'id' | 'name' | 'price' | 'dividedBy' | 'billingMode'>
+    & Pick<Subscription, 'id' | 'name' | 'price' | 'dailyPrice' | 'split' | 'billingMode'>
   )>>; }
 );
 
@@ -166,7 +167,7 @@ export const SubscriptionFormDocument = gql`
     name
     price
     billingMode
-    dividedBy
+    split
   }
 }
     `;
@@ -228,7 +229,8 @@ export const SubscriptionsListDocument = gql`
     id
     name
     price
-    dividedBy
+    dailyPrice
+    split
     billingMode
   }
 }

@@ -19,14 +19,15 @@ const typeDefs = gql`
     name: String!
     price: Float!
     billingMode: BillingMode!
-    dividedBy: Int!
+    split: Int!
+    dailyPrice: Float!
   }
 
   input SubscriptionInput {
     name: String!
     price: Float!
     billingMode: BillingMode!
-    dividedBy: Int!
+    split: Int!
   }
 
   type SaveSubscriptionResponse {
@@ -53,6 +54,16 @@ const typeDefs = gql`
   }
 `;
 
+const billingModeRatios = {
+  daily: 1,
+  weekly: 7,
+  monthly: 12,
+  quaterly: 48,
+  yearly: 365,
+};
+
+const computeDailyPrice = ({ price, billingMode }) => (price / billingModeRatios[billingMode]).toFixed(2);
+
 const resolvers = {
   Query: {
     subscriptions: () => DB.subscriptions,
@@ -62,11 +73,12 @@ const resolvers = {
     saveSubscription(_, { input, id }) {
       let subscription;
       let subscriptions;
+      const dailyPrice = computeDailyPrice(input);
       if (!id) {
-        subscription = { ...input, id: `${Date.now()}` };
+        subscription = { ...input, id: `${Date.now()}`, dailyPrice };
         subscriptions = [...DB.subscriptions, subscription];
       } else {
-        subscription = { ...input, id };
+        subscription = { ...input, id, dailyPrice };
         subscriptions = DB.subscriptions.map((item) => {
           if (item.id === id) {
             return subscription;

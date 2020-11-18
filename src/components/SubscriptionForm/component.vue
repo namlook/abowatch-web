@@ -1,7 +1,11 @@
 <script lang="ts" src="./index.ts" />
 
 <template>
-  <div>
+  <v-container>
+    <h2 class="text-h4 mb-2">
+      <span v-if="subscriptionId">{{ form.name }}</span>
+      <span v-else>New subscription</span>
+    </h2>
     <form @submit.prevent="saveSubscription">
       <v-card class="pa-5">
         <v-text-field
@@ -18,9 +22,11 @@
           clearable
         />
 
-        <div class="d-flex align-center mb-5">
-          <label>Facturation</label>
-          <v-btn-toggle
+        <div class="my-7">
+          <label>Facturé par :</label>
+          <BillingModes v-model="form.billingMode" />
+        </div>
+        <!-- <v-btn-toggle
             v-model="form.billingMode"
             borderless
             class="d-flex flex-wrap"
@@ -30,17 +36,16 @@
             <v-btn text value="monthly"> Mensuelle </v-btn>
             <v-btn text value="quaterly"> Trimestrielle </v-btn>
             <v-btn text value="yearly"> Annuelle </v-btn>
-          </v-btn-toggle>
-        </div>
+          </v-btn-toggle> -->
 
         <div class="d-flex align-center">
           <label>Partagé en</label>
           <v-btn class="mx-2" small @click="decrementSplit"> - </v-btn>
-          {{ form.dividedBy }}
+          {{ form.split }}
           <v-btn class="mx-2" small @click="incrementSplit"> + </v-btn>
         </div>
 
-        <v-card-actions class="d-flex">
+        <v-card-actions class="d-flex mt-9">
           <v-btn
             v-if="subscriptionId"
             @click="deleteSubscription"
@@ -48,15 +53,15 @@
             text
             :disabled="deleteSubscriptionLoading"
           >
-            Supprimer
+            <v-icon>mdi-trash-can-outline</v-icon>
           </v-btn>
           <div class="mr-auto"></div>
+          <v-btn depressed :to="homeLink">Annuler</v-btn>
           <v-btn color="primary" :disabled="mutationLoading" type="submit">
             Enregistrer
           </v-btn>
-          <v-btn depressed :to="homeLink">Annuler</v-btn>
         </v-card-actions>
       </v-card>
     </form>
-  </div>
+  </v-container>
 </template>

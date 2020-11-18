@@ -3,7 +3,8 @@ query SubscriptionsList {
         id
         name
         price
-        dividedBy
+        dailyPrice
+        split
         billingMode
     }
 }
