@@ -5,26 +5,17 @@
     <div v-if="loading">loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <SubscriptionsList v-else :subscriptions="subscriptions" />
-    <div class="actions">
+    <div class="d-flex justify-center">
       <v-btn
         outlined
         color="primary"
+        width="100%"
+        max-width="600"
         :to="newSubscriptonLink"
-        class="new-button"
+        class="mt-5"
       >
         new
       </v-btn>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.home {
-  .actions {
-    text-align: center;
-    .new-button {
-      width: 600px !important;
-    }
-  }
-}
-</style>

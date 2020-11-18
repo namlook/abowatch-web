@@ -89,6 +89,14 @@ export default defineComponent({
      * Misc
      */
 
+    const decrementSplit = () => {
+      form.dividedBy = form.dividedBy > 1 ? form.dividedBy - 1 : 1;
+    };
+
+    const incrementSplit = () => {
+      form.dividedBy += 1;
+    };
+
     const billingModes: {text: string; value: BillingMode}[] = [
       { text: 'Quotidienne', value: BillingMode.Daily },
       { text: 'Hebdomadaire', value: BillingMode.Weekly },
@@ -106,6 +114,8 @@ export default defineComponent({
       saveSubscription,
       mutationLoading,
       mutationError,
+      decrementSplit,
+      incrementSplit,
       billingModes,
       homeLink,
       deleteSubscription,
