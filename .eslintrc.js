@@ -18,7 +18,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'max-len': 'off',
-
+    // '@typescript-eslint/no-use-before-define': ["error", { "functions": false }],
   },
   overrides: [
     {
