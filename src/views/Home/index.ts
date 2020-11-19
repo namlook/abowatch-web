@@ -23,7 +23,7 @@ export default defineComponent({
       error,
     } = useSubscriptionsListQuery({ fetchPolicy: 'cache-and-network' });
 
-    const subscriptions = useResult(result, null, (data) => data.subscriptions);
+    const subscriptions = computed(() => useResult(result, null, (data) => data.subscriptions).value ?? []);
 
     /**
      * Total
@@ -33,20 +33,17 @@ export default defineComponent({
       billingMode: BillingMode.Monthly,
     });
 
-    const dailyPrice = computed(() => (subscriptions.value ? subscriptions.value.reduce(
+    const dailyPrice = computed(() => subscriptions.value.reduce(
       (acc: number, item: Pick<Subscription, 'dailyPrice'>) => acc + item.dailyPrice, 0,
-    ) : 0));
+    ));
 
     const priceForBillingMode = computed(() => (dailyPrice.value * billingModeRatios[state.billingMode]).toFixed(2));
 
-    const hasSplit = computed(() => {
-      const items = subscriptions.value ? subscriptions.value : [];
-      return !!items.find((item) => item.split > 1);
-    });
+    const hasSplit = computed(() => !!subscriptions.value.find((item) => item.split > 1));
 
-    const splitPrice = computed(() => (hasSplit && subscriptions.value ? subscriptions.value.reduce(
+    const splitPrice = computed(() => subscriptions.value.reduce(
       (acc: number, item: Pick<Subscription, 'dailyPrice' | 'split'>) => acc + (item.dailyPrice / item.split), 0,
-    ) : 0));
+    ));
 
     const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[state.billingMode]).toFixed(2));
 
