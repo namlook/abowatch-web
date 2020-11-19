@@ -3,7 +3,7 @@ import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
 import { BillingMode, Subscription, useSubscriptionsListQuery } from '@/generated/graphql';
 import { billingModeRatios } from '@/utils';
 import { useResult } from '@vue/apollo-composable';
-import { computed, defineComponent, reactive } from '@vue/composition-api';
+import { computed, defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Home',
@@ -29,15 +29,13 @@ export default defineComponent({
      * Total
      */
 
-    const state = reactive({
-      billingMode: BillingMode.Monthly,
-    });
+    const billingMode = ref(BillingMode.Monthly);
 
     const dailyPrice = computed(() => subscriptions.value.reduce(
       (acc: number, item: Pick<Subscription, 'dailyPrice'>) => acc + item.dailyPrice, 0,
     ));
 
-    const priceForBillingMode = computed(() => (dailyPrice.value * billingModeRatios[state.billingMode]).toFixed(2));
+    const priceForBillingMode = computed(() => (dailyPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
     const hasSplit = computed(() => !!subscriptions.value.find((item) => item.split > 1));
 
@@ -45,13 +43,13 @@ export default defineComponent({
       (acc: number, item: Pick<Subscription, 'dailyPrice' | 'split'>) => acc + (item.dailyPrice / item.split), 0,
     ));
 
-    const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[state.billingMode]).toFixed(2));
+    const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
     return {
       subscriptions,
       loading,
       error,
-      state,
+      billingMode,
       dailyPrice,
       hasSplit,
       priceForBillingMode,
