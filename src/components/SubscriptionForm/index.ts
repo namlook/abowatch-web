@@ -5,6 +5,7 @@ import {
   useSubscriptionFormQuery,
   useSubscriptionFormSaveMutation,
 } from '@/generated/graphql';
+import { useAuth } from '@/modules/auth';
 import router from '@/router';
 import links from '@/router/links';
 import { useResult } from '@vue/apollo-composable';
@@ -24,6 +25,8 @@ export default defineComponent({
   },
 
   setup({ subscriptionId }) {
+    const { userToken, isAuthenticated } = useAuth();
+
     /*
      * The form that will serve as SubscriptionInput mutation input
      */
@@ -67,6 +70,7 @@ export default defineComponent({
       onDone: onSubscriptionSaved,
     } = useSubscriptionFormSaveMutation({
       variables: {
+        userToken: userToken.value,
         input: form,
         id: subscriptionId,
       },
@@ -86,7 +90,12 @@ export default defineComponent({
       mutate: deleteSubscription,
       onDone: onSubscriptionDeleted,
       loading: deleteSubscriptionLoading,
-    } = useSubscriptionFormDeleteMutation({ variables: { id: subscriptionId } });
+    } = useSubscriptionFormDeleteMutation({
+      variables: {
+        userToken: userToken.value,
+        id: subscriptionId,
+      },
+    });
 
     onSubscriptionDeleted(() => router.push({ name: links.home }));
 
@@ -113,6 +122,8 @@ export default defineComponent({
     const homeLink = { name: links.home };
 
     return {
+      isAuthenticated,
+      userToken,
       form,
       queryLoading,
       queryError,

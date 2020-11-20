@@ -1,9 +1,12 @@
 import BillingModes from '@/components/BillingModes/component.vue';
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
 import { BillingMode, Subscription, useSubscriptionsListQuery } from '@/generated/graphql';
+import { useAuth } from '@/modules/auth';
 import { billingModeRatios } from '@/utils';
 import { useResult } from '@vue/apollo-composable';
-import { computed, defineComponent, ref } from '@vue/composition-api';
+import {
+  computed, defineComponent, ref,
+} from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Home',
@@ -14,6 +17,12 @@ export default defineComponent({
   },
 
   setup() {
+    const { userToken } = useAuth();
+
+    const queryVariables = {
+      userToken: userToken.value,
+    };
+
     /**
      * Fetch subscriptions
      */
@@ -21,9 +30,9 @@ export default defineComponent({
       result,
       loading,
       error,
-    } = useSubscriptionsListQuery({ fetchPolicy: 'cache-and-network' });
+    } = useSubscriptionsListQuery(queryVariables, { fetchPolicy: 'cache-and-network' });
 
-    const subscriptions = computed(() => useResult(result, null, (data) => data.subscriptions).value ?? []);
+    const subscriptions = computed(() => useResult(result, null, (data) => data.user?.subscriptions).value ?? []);
 
     /**
      * Total
@@ -46,6 +55,7 @@ export default defineComponent({
     const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
     return {
+      userToken,
       subscriptions,
       loading,
       error,

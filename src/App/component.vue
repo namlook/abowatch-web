@@ -10,9 +10,10 @@
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
-          <v-btn :to="aboutLink" text>
-            <v-icon>mdi-help-circle-outline</v-icon>
+          <v-btn v-if="isAuthenticated" @click="onLogout" text>
+            {{ username }} <v-icon>mdi-logout</v-icon>
           </v-btn>
+          <v-btn v-else text :to="loginLink">login</v-btn>
         </v-toolbar-items>
       </v-app-bar>
 

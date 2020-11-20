@@ -1,7 +1,7 @@
 <script lang="ts" src="./index.ts" />
 
 <template>
-  <v-container>
+  <v-container v-if="isAuthenticated">
     <h2 class="text-h4 mb-2">
       <span v-if="subscriptionId">{{ form.name }}</span>
       <span v-else>New subscription</span>
@@ -26,17 +26,6 @@
           <label>Facturé par :</label>
           <BillingModes v-model="form.billingMode" />
         </div>
-        <!-- <v-btn-toggle
-            v-model="form.billingMode"
-            borderless
-            class="d-flex flex-wrap"
-          >
-            <v-btn text value="daily"> Quotidienne </v-btn>
-            <v-btn text value="weekly"> Hebdomadaire </v-btn>
-            <v-btn text value="monthly"> Mensuelle </v-btn>
-            <v-btn text value="quaterly"> Trimestrielle </v-btn>
-            <v-btn text value="yearly"> Annuelle </v-btn>
-          </v-btn-toggle> -->
 
         <div class="d-flex align-center">
           <label>Partagé en</label>
