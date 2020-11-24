@@ -10,17 +10,21 @@
         <v-spacer></v-spacer>
 
         <v-toolbar-items>
-          <v-btn v-if="isAuthenticated" @click="onLogout" text>
+          <v-btn v-if="isAuthenticating" text> ... </v-btn>
+          <v-btn v-else-if="isAuthenticated" text @click="onLogout">
             {{ username }} <v-icon>mdi-logout</v-icon>
           </v-btn>
-          <v-btn v-else text :to="loginLink">login</v-btn>
+          <v-btn v-else text @click="login">auth0</v-btn>
         </v-toolbar-items>
       </v-app-bar>
 
       <v-main>
-        <v-container fluid>
-          <router-view />
-        </v-container>
+        <div v-if="!authRequired || (!isAuthenticating && isAuthenticated)">
+          <v-container>
+            <router-view />
+          </v-container>
+        </div>
+        <div v-else>authenticating...</div>
       </v-main>
     </v-app>
   </div>

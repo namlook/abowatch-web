@@ -5,7 +5,7 @@ import {
   useSubscriptionFormQuery,
   useSubscriptionFormSaveMutation,
 } from '@/generated/graphql';
-import { useAuth } from '@/modules/auth';
+import { useAuth0 } from '@/modules/auth';
 import router from '@/router';
 import links from '@/router/links';
 import { useResult } from '@vue/apollo-composable';
@@ -25,7 +25,7 @@ export default defineComponent({
   },
 
   setup({ subscriptionId }) {
-    const { userToken, isAuthenticated } = useAuth();
+    const { userToken, isAuthenticated } = useAuth0();
 
     /*
      * The form that will serve as SubscriptionInput mutation input

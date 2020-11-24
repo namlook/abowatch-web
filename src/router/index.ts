@@ -1,6 +1,5 @@
 import LoginForm from '@/components/LoginForm/component.vue';
 import RegisterForm from '@/components/RegisterForm/component.vue';
-import { checkAuth } from '@/modules/auth';
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import SubscriptionForm from '../components/SubscriptionForm/component.vue';
@@ -58,20 +57,26 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  // const { userToken: userTokenRef } = useAuth();
-  // const userToken = userTokenRef.value;
-  const { authRequired } = to.meta ?? { authRequired: false };
+// router.beforeEach(async (to, from, next) => {
+//   const { authRequired } = to.meta ?? { authRequired: false };
+//   // const { isAuthenticated } = await checkAuth();
+//   if (isAuthenticated && to.name === links.login) {
+//     router.push({ name: links.home });
+//     return;
+//   }
+//   if (authRequired) {
+//     if (!isAuthenticated) {
+//       if (from.name === links.login) {
+//         return;
+//       }
+//       if (to.name !== links.login) {
+//         router.push({ name: links.login });
+//         return;
+//       }
+//     }
+//   }
+//   next();
 
-  const { isAuthenticated, userToken } = await checkAuth();
-
-  if (authRequired) {
-    if (!isAuthenticated && from.name !== links.login) {
-      router.push({ name: links.login, params: { userToken } });
-      return;
-    }
-  }
-  next();
-});
+// });
 
 export default router;

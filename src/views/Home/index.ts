@@ -1,7 +1,7 @@
 import BillingModes from '@/components/BillingModes/component.vue';
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
 import { BillingMode, Subscription, useSubscriptionsListQuery } from '@/generated/graphql';
-import { useAuth } from '@/modules/auth';
+import { useAuth0 } from '@/modules/auth';
 import { billingModeRatios } from '@/utils';
 import { useResult } from '@vue/apollo-composable';
 import {
@@ -17,7 +17,7 @@ export default defineComponent({
   },
 
   setup() {
-    const { userToken } = useAuth();
+    const { userToken } = useAuth0();
 
     const queryVariables = {
       userToken: userToken.value,
