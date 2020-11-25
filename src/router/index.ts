@@ -1,9 +1,8 @@
-import LoginForm from '@/components/LoginForm/component.vue';
-import RegisterForm from '@/components/RegisterForm/component.vue';
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import SubscriptionForm from '../components/SubscriptionForm/component.vue';
 import Home from '../views/Home/component.vue';
+import LoginPage from '../views/LoginPage/component.vue';
 import links from './links';
 
 Vue.use(VueRouter);
@@ -30,26 +29,27 @@ const routes: Array<RouteConfig> = [
     props: true,
     meta: { authRequired: true },
   },
+  // {
+  //   path: '/login',
+  //   name: links.login,
+  //   component: LoginForm,
+  //   props: true,
+  // },
+  // {
+  //   path: '/register',
+  //   name: links.register,
+  //   component: RegisterForm,
+  //   props: true,
+  // },
   {
     path: '/login',
     name: links.login,
-    component: LoginForm,
     props: true,
-  },
-  {
-    path: '/register',
-    name: links.register,
-    component: RegisterForm,
-    props: true,
-  },
-  {
-    path: '/about',
-    name: links.about,
-    props: true,
+    component: LoginPage,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
 ];
 

@@ -24,13 +24,6 @@ export enum BillingMode {
   Yearly = 'yearly'
 }
 
-export type User = {
-  __typename?: 'User';
-  username: Scalars['String'];
-  token: Scalars['String'];
-  subscriptions?: Maybe<Array<Subscription>>;
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
   id: Scalars['String'];
@@ -39,28 +32,6 @@ export type Subscription = {
   billingMode: BillingMode;
   split: Scalars['Int'];
   dailyPrice: Scalars['Float'];
-};
-
-export type LoginInput = {
-  username: Scalars['ID'];
-  password: Scalars['String'];
-};
-
-export type LoginResponse = {
-  __typename?: 'LoginResponse';
-  userToken?: Maybe<Scalars['String']>;
-  error?: Maybe<Scalars['String']>;
-};
-
-export type RegisterInput = {
-  username: Scalars['ID'];
-  password: Scalars['String'];
-};
-
-export type RegisterResponse = {
-  __typename?: 'RegisterResponse';
-  userToken?: Maybe<Scalars['String']>;
-  error?: Maybe<Scalars['String']>;
 };
 
 export type SubscriptionInput = {
@@ -84,48 +55,24 @@ export type Query = {
   __typename?: 'Query';
   subscriptions?: Maybe<Array<Subscription>>;
   subscription?: Maybe<Subscription>;
-  user?: Maybe<User>;
 };
 
 export type QuerySubscriptionArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
-export type QueryUserArgs = {
-  token: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  login?: Maybe<LoginResponse>;
-  logout?: Maybe<Scalars['String']>;
-  register?: Maybe<RegisterResponse>;
   saveSubscription?: Maybe<SaveSubscriptionResponse>;
   deleteSubscription?: Maybe<DeleteSubscriptionResponse>;
 };
 
-export type MutationLoginArgs = {
-  username: Scalars['ID'];
-  password: Scalars['String'];
-};
-
-export type MutationLogoutArgs = {
-  token: Scalars['String'];
-};
-
-export type MutationRegisterArgs = {
-  username: Scalars['ID'];
-  password: Scalars['String'];
-};
-
 export type MutationSaveSubscriptionArgs = {
-  userToken: Scalars['String'];
   input: SubscriptionInput;
   id?: Maybe<Scalars['ID']>;
 };
 
 export type MutationDeleteSubscriptionArgs = {
-  userToken: Scalars['String'];
   id: Scalars['ID'];
 };
 
@@ -134,34 +81,7 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
-export type LoginFormMutationVariables = Exact<{
-  username: Scalars['ID'];
-  password: Scalars['String'];
-}>;
-
-export type LoginFormMutation = (
-  { __typename?: 'Mutation' }
-  & { login?: Maybe<(
-    { __typename?: 'LoginResponse' }
-    & Pick<LoginResponse, 'userToken' | 'error'>
-  )>; }
-);
-
-export type RegisterFormMutationVariables = Exact<{
-  username: Scalars['ID'];
-  password: Scalars['String'];
-}>;
-
-export type RegisterFormMutation = (
-  { __typename?: 'Mutation' }
-  & { register?: Maybe<(
-    { __typename?: 'RegisterResponse' }
-    & Pick<RegisterResponse, 'userToken' | 'error'>
-  )>; }
-);
-
 export type SubscriptionFormDeleteMutationVariables = Exact<{
-  userToken: Scalars['String'];
   id: Scalars['ID'];
 }>;
 
@@ -186,7 +106,6 @@ export type SubscriptionFormQuery = (
 );
 
 export type SubscriptionFormSaveMutationVariables = Exact<{
-  userToken: Scalars['String'];
   input: SubscriptionInput;
   id?: Maybe<Scalars['ID']>;
 }>;
@@ -202,108 +121,19 @@ export type SubscriptionFormSaveMutation = (
   )>; }
 );
 
-export type AuthQueryVariables = Exact<{
-  token: Scalars['String'];
-}>;
-
-export type AuthQuery = (
-  { __typename?: 'Query' }
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'username'>
-  )>; }
-);
-
-export type LogoutMutationVariables = Exact<{
-  token: Scalars['String'];
-}>;
-
-export type LogoutMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'logout'>
-);
-
-export type SubscriptionsListQueryVariables = Exact<{
-  userToken: Scalars['String'];
-}>;
+export type SubscriptionsListQueryVariables = Exact<{ [key: string]: never }>;
 
 export type SubscriptionsListQuery = (
   { __typename?: 'Query' }
-  & { user?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'username'>
-    & { subscriptions?: Maybe<Array<(
-      { __typename?: 'Subscription' }
-      & Pick<Subscription, 'id' | 'name' | 'price' | 'dailyPrice' | 'split' | 'billingMode'>
-    )>>; }
-  )>; }
+  & { subscriptions?: Maybe<Array<(
+    { __typename?: 'Subscription' }
+    & Pick<Subscription, 'id' | 'name' | 'price' | 'dailyPrice' | 'split' | 'billingMode'>
+  )>>; }
 );
 
-export const LoginFormDocument = gql`
-    mutation LoginForm($username: ID!, $password: String!) {
-  login(username: $username, password: $password) {
-    userToken
-    error
-  }
-}
-    `;
-
-/**
- * __useLoginFormMutation__
- *
- * To run a mutation, you first call `useLoginFormMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useLoginFormMutation` returns an object that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
- *
- * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
- *
- * @example
- * const { mutate, loading, error, onDone } = useLoginFormMutation({
- *   variables: {
- *     username: // value for 'username'
- *     password: // value for 'password'
- *   },
- * });
- */
-export function useLoginFormMutation(options: VueApolloComposable.UseMutationOptions<LoginFormMutation, LoginFormMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LoginFormMutation, LoginFormMutationVariables>>) {
-  return VueApolloComposable.useMutation<LoginFormMutation, LoginFormMutationVariables>(LoginFormDocument, options);
-}
-export type LoginFormMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LoginFormMutation, LoginFormMutationVariables>;
-export const RegisterFormDocument = gql`
-    mutation RegisterForm($username: ID!, $password: String!) {
-  register(username: $username, password: $password) {
-    userToken
-    error
-  }
-}
-    `;
-
-/**
- * __useRegisterFormMutation__
- *
- * To run a mutation, you first call `useRegisterFormMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useRegisterFormMutation` returns an object that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
- *
- * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
- *
- * @example
- * const { mutate, loading, error, onDone } = useRegisterFormMutation({
- *   variables: {
- *     username: // value for 'username'
- *     password: // value for 'password'
- *   },
- * });
- */
-export function useRegisterFormMutation(options: VueApolloComposable.UseMutationOptions<RegisterFormMutation, RegisterFormMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<RegisterFormMutation, RegisterFormMutationVariables>>) {
-  return VueApolloComposable.useMutation<RegisterFormMutation, RegisterFormMutationVariables>(RegisterFormDocument, options);
-}
-export type RegisterFormMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<RegisterFormMutation, RegisterFormMutationVariables>;
 export const SubscriptionFormDeleteDocument = gql`
-    mutation SubscriptionFormDelete($userToken: String!, $id: ID!) {
-  deleteSubscription(userToken: $userToken, id: $id) {
+    mutation SubscriptionFormDelete($id: ID!) {
+  deleteSubscription(id: $id) {
     success
   }
 }
@@ -322,7 +152,6 @@ export const SubscriptionFormDeleteDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useSubscriptionFormDeleteMutation({
  *   variables: {
- *     userToken: // value for 'userToken'
  *     id: // value for 'id'
  *   },
  * });
@@ -363,8 +192,8 @@ export function useSubscriptionFormQuery(variables?: SubscriptionFormQueryVariab
 }
 export type SubscriptionFormQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SubscriptionFormQuery, SubscriptionFormQueryVariables>;
 export const SubscriptionFormSaveDocument = gql`
-    mutation SubscriptionFormSave($userToken: String!, $input: SubscriptionInput!, $id: ID) {
-  saveSubscription(userToken: $userToken, input: $input, id: $id) {
+    mutation SubscriptionFormSave($input: SubscriptionInput!, $id: ID) {
+  saveSubscription(input: $input, id: $id) {
     subscription {
       id
     }
@@ -385,7 +214,6 @@ export const SubscriptionFormSaveDocument = gql`
  * @example
  * const { mutate, loading, error, onDone } = useSubscriptionFormSaveMutation({
  *   variables: {
- *     userToken: // value for 'userToken'
  *     input: // value for 'input'
  *     id: // value for 'id'
  *   },
@@ -395,72 +223,15 @@ export function useSubscriptionFormSaveMutation(options: VueApolloComposable.Use
   return VueApolloComposable.useMutation<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables>(SubscriptionFormSaveDocument, options);
 }
 export type SubscriptionFormSaveMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<SubscriptionFormSaveMutation, SubscriptionFormSaveMutationVariables>;
-export const AuthDocument = gql`
-    query Auth($token: String!) {
-  user(token: $token) {
-    username
-  }
-}
-    `;
-
-/**
- * __useAuthQuery__
- *
- * To run a query within a Vue component, call `useAuthQuery` and pass it any options that fit your needs.
- * When your component renders, `useAuthQuery` returns an object from Apollo Client that contains result, loading and error properties
- * you can use to render your UI.
- *
- * @param variables that will be passed into the query
- * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
- *
- * @example
- * const { result, loading, error } = useAuthQuery({
- *   token: // value for 'token'
- * });
- */
-export function useAuthQuery(variables: AuthQueryVariables | VueCompositionApi.Ref<AuthQueryVariables> | ReactiveFunction<AuthQueryVariables>, options: VueApolloComposable.UseQueryOptions<AuthQuery, AuthQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<AuthQuery, AuthQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<AuthQuery, AuthQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<AuthQuery, AuthQueryVariables>(AuthDocument, variables, options);
-}
-export type AuthQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<AuthQuery, AuthQueryVariables>;
-export const LogoutDocument = gql`
-    mutation Logout($token: String!) {
-  logout(token: $token)
-}
-    `;
-
-/**
- * __useLogoutMutation__
- *
- * To run a mutation, you first call `useLogoutMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns an object that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
- *
- * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
- *
- * @example
- * const { mutate, loading, error, onDone } = useLogoutMutation({
- *   variables: {
- *     token: // value for 'token'
- *   },
- * });
- */
-export function useLogoutMutation(options: VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<LogoutMutation, LogoutMutationVariables>>) {
-  return VueApolloComposable.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
-}
-export type LogoutMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<LogoutMutation, LogoutMutationVariables>;
 export const SubscriptionsListDocument = gql`
-    query SubscriptionsList($userToken: String!) {
-  user(token: $userToken) {
-    username
-    subscriptions {
-      id
-      name
-      price
-      dailyPrice
-      split
-      billingMode
-    }
+    query SubscriptionsList {
+  subscriptions {
+    id
+    name
+    price
+    dailyPrice
+    split
+    billingMode
   }
 }
     `;
@@ -472,15 +243,12 @@ export const SubscriptionsListDocument = gql`
  * When your component renders, `useSubscriptionsListQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
- * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useSubscriptionsListQuery({
- *   userToken: // value for 'userToken'
- * });
+ * const { result, loading, error } = useSubscriptionsListQuery();
  */
-export function useSubscriptionsListQuery(variables: SubscriptionsListQueryVariables | VueCompositionApi.Ref<SubscriptionsListQueryVariables> | ReactiveFunction<SubscriptionsListQueryVariables>, options: VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<SubscriptionsListQuery, SubscriptionsListQueryVariables>(SubscriptionsListDocument, variables, options);
+export function useSubscriptionsListQuery(options: VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SubscriptionsListQuery, SubscriptionsListQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<SubscriptionsListQuery, SubscriptionsListQueryVariables>(SubscriptionsListDocument, {}, options);
 }
 export type SubscriptionsListQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SubscriptionsListQuery, SubscriptionsListQueryVariables>;

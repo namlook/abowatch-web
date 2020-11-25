@@ -1,5 +1,5 @@
-mutation SubscriptionFormSave($userToken: String!, $input: SubscriptionInput!, $id: ID) {
-    saveSubscription(userToken: $userToken, input: $input, id: $id) {
+mutation SubscriptionFormSave($input: SubscriptionInput!, $id: ID) {
+    saveSubscription(input: $input, id: $id) {
         subscription {
             id
         }

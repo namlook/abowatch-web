@@ -1,5 +1,5 @@
-mutation SubscriptionFormDelete($userToken: String!, $id: ID!) {
-    deleteSubscription(userToken: $userToken, id: $id) {
+mutation SubscriptionFormDelete($id: ID!) {
+    deleteSubscription(id: $id) {
         success
     }
 }

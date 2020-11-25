@@ -17,11 +17,7 @@ export default defineComponent({
   },
 
   setup() {
-    const { userToken } = useAuth0();
-
-    const queryVariables = {
-      userToken: userToken.value,
-    };
+    useAuth0();
 
     /**
      * Fetch subscriptions
@@ -30,9 +26,9 @@ export default defineComponent({
       result,
       loading,
       error,
-    } = useSubscriptionsListQuery(queryVariables, { fetchPolicy: 'cache-and-network' });
+    } = useSubscriptionsListQuery({ fetchPolicy: 'cache-and-network' });
 
-    const subscriptions = computed(() => useResult(result, null, (data) => data.user?.subscriptions).value ?? []);
+    const subscriptions = computed(() => useResult(result, null, (data) => data.subscriptions).value ?? []);
 
     /**
      * Total
@@ -46,7 +42,7 @@ export default defineComponent({
 
     const priceForBillingMode = computed(() => (dailyPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
-    const hasSplit = computed(() => !!subscriptions.value.find((item) => item.split > 1));
+    const hasSplit = computed(() => !!subscriptions.value.find((item: Subscription) => item.split > 1));
 
     const splitPrice = computed(() => subscriptions.value.reduce(
       (acc: number, item: Pick<Subscription, 'dailyPrice' | 'split'>) => acc + (item.dailyPrice / item.split), 0,
@@ -55,7 +51,6 @@ export default defineComponent({
     const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
     return {
-      userToken,
       subscriptions,
       loading,
       error,

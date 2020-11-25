@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '@/config';
 import createAuth0Client from '@auth0/auth0-spa-js';
 
 export interface Auth0User {
@@ -12,9 +13,9 @@ export interface Auth0User {
 }
 
 const DEFAULT_OPTIONS = {
-  domain: process.env.VUE_APP_AUTH0_DOMAIN || 'xxx',
+  domain: AUTH0_DOMAIN,
   redirect_uri: window.location.origin,
-  client_id: process.env.VUE_APP_AUTH0_CLIENT_ID || 'xxx',
+  client_id: AUTH0_CLIENT_ID,
 };
 
 export default {

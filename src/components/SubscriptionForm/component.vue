@@ -1,7 +1,7 @@
 <script lang="ts" src="./index.ts" />
 
 <template>
-  <v-container v-if="isAuthenticated">
+  <v-container>
     <h2 class="text-h4 mb-2">
       <span v-if="subscriptionId">{{ form.name }}</span>
       <span v-else>New subscription</span>
@@ -11,11 +11,11 @@
         <v-text-field
           v-model="form.name"
           label="Nom de l'entreprise"
-          clearable
           required
         />
 
         <v-text-field
+          type="number"
           v-model.number="form.price"
           label="Prix"
           required
@@ -29,9 +29,43 @@
 
         <div class="d-flex align-center">
           <label>Partagé en</label>
-          <v-btn class="mx-2" small @click="decrementSplit"> - </v-btn>
+          <v-btn
+            :depressed="form.split === 1"
+            class="mx-2"
+            :class="{ primary: form.split === 1 }"
+            small
+            @click="form.split = 1"
+          >
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+          <v-btn
+            :depressed="form.split === 2"
+            class="mx-2"
+            :class="{ primary: form.split === 2 }"
+            small
+            @click="form.split = 2"
+          >
+            <v-icon>mdi-account</v-icon>
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+          <v-btn
+            :depressed="form.split === 3"
+            class="mx-2"
+            :class="{ primary: form.split === 3 }"
+            small
+            @click="form.split = 3"
+          >
+            <v-icon>mdi-account</v-icon>
+            <v-icon>mdi-account</v-icon>
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+          <v-btn class="mx-2" text small @click="decrementSplit">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
           {{ form.split }}
-          <v-btn class="mx-2" small @click="incrementSplit"> + </v-btn>
+          <v-btn class="mx-2" text small @click="incrementSplit">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
         </div>
 
         <v-card-actions class="d-flex mt-9">

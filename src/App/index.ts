@@ -8,7 +8,7 @@ export default defineComponent({
 
   setup(_, ctx) {
     const {
-      isAuthenticated, isAuthenticating, username, logout, login,
+      isAuthenticated, isAuthenticating, username, logout,
     } = useAuth0();
 
     const authRequired = computed(() => ctx.root.$route.meta?.authRequired ?? false);
@@ -20,25 +20,14 @@ export default defineComponent({
     });
 
     const goToHome = () => router.push({ name: links.home });
-    const aboutLink = { name: links.about };
-
-    const onLogout = async () => {
-      await logout();
-      router.push({ name: links.login });
-    };
-
-    const loginLink = { name: links.login };
 
     return {
       goToHome,
-      login,
       authRequired,
       username,
-      aboutLink,
-      loginLink,
       isAuthenticated,
       isAuthenticating,
-      onLogout,
+      logout,
     };
   },
 });

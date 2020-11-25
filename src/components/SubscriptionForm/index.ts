@@ -25,7 +25,7 @@ export default defineComponent({
   },
 
   setup({ subscriptionId }) {
-    const { userToken, isAuthenticated } = useAuth0();
+    useAuth0();
 
     /*
      * The form that will serve as SubscriptionInput mutation input
@@ -70,7 +70,6 @@ export default defineComponent({
       onDone: onSubscriptionSaved,
     } = useSubscriptionFormSaveMutation({
       variables: {
-        userToken: userToken.value,
         input: form,
         id: subscriptionId,
       },
@@ -92,7 +91,6 @@ export default defineComponent({
       loading: deleteSubscriptionLoading,
     } = useSubscriptionFormDeleteMutation({
       variables: {
-        userToken: userToken.value,
         id: subscriptionId,
       },
     });
@@ -122,8 +120,6 @@ export default defineComponent({
     const homeLink = { name: links.home };
 
     return {
-      isAuthenticated,
-      userToken,
       form,
       queryLoading,
       queryError,

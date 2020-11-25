@@ -1,6 +1,0 @@
-mutation LoginForm($username: ID!, $password: String!) {
-    login(username: $username, password: $password) {
-        userToken
-        error
-    }
-}

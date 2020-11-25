@@ -1,6 +1,0 @@
-mutation RegisterForm($username: ID!, $password: String!) {
-    register(username: $username, password: $password) {
-        userToken
-        error
-    }
-}

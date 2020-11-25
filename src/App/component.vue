@@ -11,10 +11,9 @@
 
         <v-toolbar-items>
           <v-btn v-if="isAuthenticating" text> ... </v-btn>
-          <v-btn v-else-if="isAuthenticated" text @click="onLogout">
+          <v-btn v-else-if="isAuthenticated" text @click="logout">
             {{ username }} <v-icon>mdi-logout</v-icon>
           </v-btn>
-          <v-btn v-else text @click="login">auth0</v-btn>
         </v-toolbar-items>
       </v-app-bar>
 

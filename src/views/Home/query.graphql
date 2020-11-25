@@ -1,13 +1,10 @@
-query SubscriptionsList($userToken: String!) {
-    user(token: $userToken) {
-        username
-        subscriptions {
-            id
-            name
-            price
-            dailyPrice
-            split
-            billingMode
-        }
+query SubscriptionsList {
+    subscriptions {
+        id
+        name
+        price
+        dailyPrice
+        split
+        billingMode
     }
 }
