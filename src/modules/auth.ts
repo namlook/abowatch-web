@@ -11,20 +11,6 @@ const username = ref('');
 const isAuthenticated = ref(false);
 const isAuthenticating = ref(true);
 
-// const $auth0 = useAuth0Plugin({
-//   redirectUri: window.location.origin,
-//   domain: process.env.VUE_APP_AUTH0_DOMAIN,
-//   clientId: process.env.VUE_APP_AUTH0_CLIENT_ID,
-//   onRedirectCallback: (appState: {targetUrl: string}) => {
-//     console.log('.....', window.location.pathname, appState.targetUrl);
-//     router.push(
-//       appState && appState.targetUrl
-//         ? appState.targetUrl
-//         : window.location.pathname,
-//     );
-//   },
-// });
-
 let auth0Client: Auth0Client;
 
 export const useAuth0 = () => {
