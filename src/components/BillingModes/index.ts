@@ -8,12 +8,16 @@ export default defineComponent({
   props: {
     value: {
       type: String as PropType<BillingMode>,
-      default: BillingMode.Monthly,
+      required: true,
     },
   },
 
-  setup({ value }, { emit }) {
-    const billingMode = ref(value);
+  setup(props, { emit }) {
+    const billingMode = ref(props.value);
+
+    watch(() => props.value, (val) => {
+      billingMode.value = val;
+    });
 
     watch(billingMode, (updatedBillingMode) => {
       emit('input', updatedBillingMode);
