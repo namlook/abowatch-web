@@ -1,6 +1,8 @@
 import { ApolloServer, gql } from 'apollo-server-lambda';
 import jwt, { VerifyErrors, VerifyOptions } from 'jsonwebtoken';
 import jwksClient, { SigningKey } from 'jwks-rsa';
+import { ObjectID } from 'mongodb';
+import createDB from './db';
 
 const options: VerifyOptions = {
   audience: 'https://dev-rv2jju37.eu.auth0.com/userinfo', // 'http://localhost:9000/api',
@@ -14,7 +16,9 @@ const client = jwksClient({
 
 function getKey(header, cb) {
   client.getSigningKey(header.kid, (err, key: SigningKey) => {
-    console.log('XXXX', err);
+    if (err) {
+      console.log('XXXX', err);
+    }
     const signingKey = 'publicKey' in key ? key.publicKey : key.rsaPublicKey;
     cb(null, signingKey);
   });
@@ -26,7 +30,6 @@ async function isTokenValid(token): Promise<{userId: string; error: string}> {
 
     const result: Promise<{userId: string; error: string}> = new Promise((resolve, _) => {
       jwt.verify(bearerToken[1], getKey, options, (error: VerifyErrors, decoded: {sub: string}) => {
-        console.log('xxxxx', error, decoded);
         if (error) {
           resolve({ error: error.message, userId: '' });
         }
@@ -105,47 +108,62 @@ const billingModeRatios = {
 };
 
 const computeDailyPrice = ({ price, billingMode }) => (price / billingModeRatios[billingMode]).toFixed(2);
+const mongoToGraphql = (mongoDocument) => {
+  if (!mongoDocument) {
+    throw new Error('Document is null');
+  }
+  const { _id, ...rest } = mongoDocument;
+  return { ...rest, id: _id };
+};
 
 const resolvers = {
   Query: {
-    subscriptions: (_, __, { userId }) => DB.subscriptions.filter((item) => item.userId === userId),
-    subscription: (_, { id }, { userId }) => DB.subscriptions.find((item) => item.id === id && item.userId === userId),
+    subscriptions: async (_, __, { userId, db }) => {
+      const cursor = await db.subscriptions.find({ userId });
+      return (await cursor.toArray()).map(mongoToGraphql);
+    },
+    subscription: async (_, { id }, { userId, db }) => {
+      const data = await db.subscriptions.findOne({ _id: new ObjectID(id), userId });
+      return data ? mongoToGraphql(data) : null;
+    },
   },
+
   Mutation: {
-    saveSubscription(_, { input, id }, { userId }) {
-      let subscription;
-      let subscriptions;
+    async saveSubscription(_, { input, id }, { userId, db }) {
       if (!userId) {
         throw Error('bad user');
       }
       const dailyPrice = computeDailyPrice(input);
+
+      let docId: ObjectID;
       if (!id) {
-        subscription = {
-          ...input, id: `${Date.now()}`, dailyPrice, userId,
-        };
-        subscriptions = [...DB.subscriptions, subscription];
-      } else {
-        subscription = {
-          ...input, id, dailyPrice, userId,
-        };
-        subscriptions = DB.subscriptions.map((item) => {
-          if (item.id === id) {
-            return subscription;
-          }
-          return item;
+        const { insertedId } = await db.subscriptions.insertOne({
+          ...input,
+          dailyPrice,
+          userId,
         });
+        docId = insertedId;
+      } else {
+        docId = new ObjectID(id);
+        const newDocument = {
+          ...input,
+          _id: docId,
+          dailyPrice,
+          userId,
+        };
+        await db.subscriptions.replaceOne({ _id: docId }, newDocument);
       }
-      DB.subscriptions = subscriptions;
+      const data = await db.subscriptions.findOne({ _id: docId });
+      const subscription = mongoToGraphql(data);
       return { subscription };
     },
-    deleteSubscription(_, { id }, { userId }) {
+    async deleteSubscription(_, { id }, { userId, db }) {
       if (!userId) {
         throw Error('bad user');
       }
-      const nbSubscriptions = DB.subscriptions.length;
-      DB.subscriptions = DB.subscriptions.filter((item) => item.userId === userId && item.id !== id);
+      const { result } = await db.subscriptions.deleteOne({ _id: new ObjectID(id) });
       return {
-        success: nbSubscriptions > DB.subscriptions.length,
+        success: result.ok,
       };
     },
   },
@@ -157,7 +175,8 @@ const server = new ApolloServer({
   introspection: true,
   context: async ({ event }) => {
     const { userId } = await isTokenValid(event.headers.authorization);
-    return { userId };
+    const db = await createDB();
+    return { userId, db };
   },
 });
 
