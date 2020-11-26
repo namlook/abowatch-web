@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
 import * as VueApolloComposable from '@vue/apollo-composable';
 import * as VueCompositionApi from '@vue/composition-api';
+import gql from 'graphql-tag';
 
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -187,7 +187,7 @@ export const SubscriptionFormDocument = gql`
  *   id: // value for 'id'
  * });
  */
-export function useSubscriptionFormQuery(variables?: SubscriptionFormQueryVariables | VueCompositionApi.Ref<SubscriptionFormQueryVariables> | ReactiveFunction<SubscriptionFormQueryVariables>, options: VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables>> = {}) {
+export function useSubscriptionFormQuery(variables: SubscriptionFormQueryVariables | VueCompositionApi.Ref<SubscriptionFormQueryVariables> | ReactiveFunction<SubscriptionFormQueryVariables>, options: VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SubscriptionFormQuery, SubscriptionFormQueryVariables>> = {}) {
   return VueApolloComposable.useQuery<SubscriptionFormQuery, SubscriptionFormQueryVariables>(SubscriptionFormDocument, variables, options);
 }
 export type SubscriptionFormQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<SubscriptionFormQuery, SubscriptionFormQueryVariables>;
