@@ -5,7 +5,7 @@ import { ObjectID } from 'mongodb';
 import createDB from './db';
 
 const options: VerifyOptions = {
-  audience: 'https://dev-rv2jju37.eu.auth0.com/userinfo', // 'http://localhost:9000/api',
+  audience: 'https://dev-rv2jju37.eu.auth0.com/userinfo',
   issuer: 'https://dev-rv2jju37.eu.auth0.com/',
   algorithms: ['RS256'],
 };
@@ -44,10 +44,6 @@ async function isTokenValid(token): Promise<{userId: string; error: string}> {
 
   return { error: 'No token provided', userId: '' };
 }
-
-const DB = {
-  subscriptions: [],
-};
 
 const typeDefs = gql`
 

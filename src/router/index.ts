@@ -29,18 +29,6 @@ const routes: Array<RouteConfig> = [
     props: true,
     meta: { authRequired: true },
   },
-  // {
-  //   path: '/login',
-  //   name: links.login,
-  //   component: LoginForm,
-  //   props: true,
-  // },
-  // {
-  //   path: '/register',
-  //   name: links.register,
-  //   component: RegisterForm,
-  //   props: true,
-  // },
   {
     path: '/login',
     name: links.login,
