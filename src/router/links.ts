@@ -3,7 +3,6 @@ export default {
   auth: 'auth',
   register: 'register',
   login: 'login',
-  about: 'about',
   subscriptions: {
     new: 'newSubscriptions',
     edit: 'editSubscriptions',

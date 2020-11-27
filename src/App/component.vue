@@ -19,9 +19,7 @@
 
       <v-main>
         <div v-if="!authRequired || (!isAuthenticating && isAuthenticated)">
-          <v-container>
-            <router-view />
-          </v-container>
+          <router-view />
         </div>
         <div v-else>authenticating...</div>
       </v-main>

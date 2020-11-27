@@ -6,11 +6,12 @@
     color="primary"
     borderless
     class="d-flex flex-wrap"
+    :class="{ 'justify-space-between': spaceBeetween }"
   >
-    <v-btn text value="daily"> Jour </v-btn>
-    <v-btn text value="weekly"> Semaine </v-btn>
-    <v-btn text value="monthly"> Mois </v-btn>
+    <v-btn text small value="daily"> Jour </v-btn>
+    <v-btn text small value="weekly"> Semaine </v-btn>
+    <v-btn text small value="monthly"> Mois </v-btn>
     <!-- <v-btn text value="quaterly"> Trimestrielle </v-btn> -->
-    <v-btn text value="yearly"> Année </v-btn>
+    <v-btn text small value="yearly"> Année </v-btn>
   </v-btn-toggle>
 </template>

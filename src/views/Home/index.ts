@@ -2,11 +2,10 @@ import BillingModes from '@/components/BillingModes/component.vue';
 import SubscriptionsList from '@/components/SubscriptionsList/component.vue';
 import { BillingMode, Subscription, useSubscriptionsListQuery } from '@/generated/graphql';
 import { useAuth0 } from '@/modules/auth';
+import links from '@/router/links';
 import { billingModeRatios } from '@/utils';
 import { useResult } from '@vue/apollo-composable';
-import {
-  computed, defineComponent, ref,
-} from '@vue/composition-api';
+import { computed, defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Home',
@@ -50,6 +49,8 @@ export default defineComponent({
 
     const splitPriceForBillingMode = computed(() => (hasSplit && splitPrice.value * billingModeRatios[billingMode.value]).toFixed(2));
 
+    const newSubscriptonLink = { name: links.subscriptions.new };
+
     return {
       subscriptions,
       loading,
@@ -59,6 +60,7 @@ export default defineComponent({
       hasSplit,
       priceForBillingMode,
       splitPriceForBillingMode,
+      newSubscriptonLink,
     };
   },
 });

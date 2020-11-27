@@ -10,6 +10,10 @@ export default defineComponent({
       type: String as PropType<BillingMode>,
       required: true,
     },
+    spaceBeetween: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props, { emit }) {

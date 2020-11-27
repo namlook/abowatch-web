@@ -28,44 +28,23 @@
         </div>
 
         <div class="d-flex align-center">
-          <label>Partagé en</label>
-          <v-btn
-            :depressed="form.split === 1"
-            class="mx-2"
-            :class="{ primary: form.split === 1 }"
-            small
-            @click="form.split = 1"
-          >
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
-          <v-btn
-            :depressed="form.split === 2"
-            class="mx-2"
-            :class="{ primary: form.split === 2 }"
-            small
-            @click="form.split = 2"
-          >
-            <v-icon>mdi-account</v-icon>
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
-          <v-btn
-            :depressed="form.split === 3"
-            class="mx-2"
-            :class="{ primary: form.split === 3 }"
-            small
-            @click="form.split = 3"
-          >
-            <v-icon>mdi-account</v-icon>
-            <v-icon>mdi-account</v-icon>
-            <v-icon>mdi-account</v-icon>
-          </v-btn>
-          <v-btn class="mx-2" text small @click="decrementSplit">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-          {{ form.split }}
-          <v-btn class="mx-2" text small @click="incrementSplit">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
+          <div v-if="form.split > 1">
+            <label>Partagé en {{ form.split }}</label>
+            <v-btn text small @click="decrementSplit">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+            <v-icon v-for="i in form.split" :key="`${i}-icon`">
+              mdi-account
+            </v-icon>
+            <v-btn text small @click="incrementSplit">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </div>
+          <div v-else>
+            <v-btn small depressed @click="incrementSplit">
+              <v-icon>mdi-plus</v-icon> partager cet abonnement
+            </v-btn>
+          </div>
         </div>
 
         <v-card-actions class="d-flex mt-9">

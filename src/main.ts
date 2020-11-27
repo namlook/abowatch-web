@@ -3,6 +3,7 @@ import { provide } from '@vue/composition-api';
 import Vue from 'vue';
 import ApolloClient from './apollo';
 import App from './App/component.vue';
+import { BillingMode } from './generated/graphql';
 import vuetify from './plugins/vuetify';
 import router from './router';
 import store from './store';
@@ -42,6 +43,18 @@ import store from './store';
 // });
 
 Vue.config.productionTip = false;
+
+Vue.filter('prettifyBillingMode', (value: BillingMode): string => {
+  if (!value) return '';
+  const billingModeLabels = {
+    [BillingMode.Daily]: 'jour',
+    [BillingMode.Weekly]: 'semaine',
+    [BillingMode.Monthly]: 'mois',
+    [BillingMode.Quaterly]: 'trimestre',
+    [BillingMode.Yearly]: 'an',
+  };
+  return billingModeLabels[value] ?? '';
+});
 
 new Vue({
   router,
